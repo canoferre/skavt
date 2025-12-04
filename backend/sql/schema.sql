@@ -25,3 +25,19 @@ CREATE TABLE IF NOT EXISTS `search_profiles` (
   `updated_at` DATETIME NOT NULL,
   CONSTRAINT `fk_search_profiles_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `listings` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `source` VARCHAR(50) NOT NULL,
+  `listing_id` VARCHAR(100) NOT NULL,
+  `title` VARCHAR(500) NULL,
+  `location` VARCHAR(255) NULL,
+  `city` VARCHAR(255) NULL,
+  `district` VARCHAR(255) NULL,
+  `price_eur` INT NULL,
+  `size_m2` DECIMAL(10,2) NULL,
+  `url` VARCHAR(500) NOT NULL,
+  `first_seen` DATETIME NOT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `uniq_source_listing` (`source`, `listing_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
