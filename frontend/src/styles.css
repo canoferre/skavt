@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 :root {
   --green: #22c55e;
   --green-dark: #16a34a;
@@ -7,7 +9,13 @@
   --muted: #6b7280;
   --card-bg: #ffffff;
   --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Additional palette for accents and gradients */
+  --accent: 141 70% 47%;
+  --accent-foreground: 0 0% 100%;
+  --gradient-hero: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 27% 97%) 100%);
+  --gradient-accent: linear-gradient(135deg, hsl(141 70% 52%) 0%, hsl(141 70% 40%) 100%);
+  --shadow-glow: 0 0 40px hsl(141 70% 47% / 0.3);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--text);
   background: var(--bg);
 }
@@ -98,7 +106,7 @@ a {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--green), #2ecc71);
+  background: var(--gradient-accent);
   color: #ffffff;
   box-shadow: 0 10px 25px rgba(34, 197, 94, 0.25);
 }
@@ -221,7 +229,7 @@ a {
   display: inline-flex;
   align-items: center;
   padding: 6px 12px;
-  background: var(--green);
+  background: var(--gradient-accent);
   color: #fff;
   border-radius: 999px;
   font-size: 0.85rem;
@@ -569,6 +577,56 @@ a {
   color: var(--green-dark);
 }
 
+/* Utility helpers inspired by Tailwind-style tokens */
+.text-gradient {
+  background-image: var(--gradient-accent);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.bg-gradient-hero {
+  background: var(--gradient-hero);
+}
+
+.bg-gradient-accent {
+  background: var(--gradient-accent);
+}
+
+.shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.stagger-children > * {
+  opacity: 0;
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -589,6 +647,46 @@ a {
   }
   100% {
     transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
   }
 }
 
