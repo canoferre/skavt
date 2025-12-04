@@ -12,6 +12,20 @@ type ProfileForm = {
   is_active: boolean;
 };
 
+type Listing = {
+  id: number;
+  source?: string;
+  listing_id?: string;
+  title?: string | null;
+  location?: string | null;
+  city?: string | null;
+  district?: string | null;
+  price_eur?: number | null;
+  size_m2?: number | null;
+  url?: string;
+  first_seen?: string;
+};
+
 const defaultProfile: ProfileForm = {
   location: '',
   min_price: '',
@@ -24,18 +38,31 @@ const defaultProfile: ProfileForm = {
   is_active: true,
 };
 
-const exampleListings = [
-  { title: 'Svetlo 2-sobno stanovanje', location: 'Ljubljana - Bežigrad', price: '320.000 €', sqm: '62 m²' },
-  { title: 'Hiša z vrtom in garažo', location: 'Maribor - Tabor', price: '285.000 €', sqm: '140 m²' },
-  { title: 'Zemljišče za gradnjo', location: 'Škofja Loka', price: '115.000 €', sqm: '750 m²' },
-];
-
 const DashboardPage = () => {
   const [profile, setProfile] = useState<ProfileForm>(defaultProfile);
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loadingListings, setLoadingListings] = useState<boolean>(false);
+
+  const fetchListings = async () => {
+    setLoadingListings(true);
+    try {
+      const res = await fetch('/api/listings_search.php', { credentials: 'include' });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setListings(data.listings || []);
+      } else {
+        setListings([]);
+      }
+    } catch (err) {
+      setListings([]);
+    } finally {
+      setLoadingListings(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -62,6 +89,7 @@ const DashboardPage = () => {
         setError('Napaka pri nalaganju profila.');
       } finally {
         setLoading(false);
+        fetchListings();
       }
     };
 
@@ -114,6 +142,7 @@ const DashboardPage = () => {
           notify_telegram: Boolean(Number(data.profile.notify_telegram)),
           is_active: Boolean(Number(data.profile.is_active)),
         });
+        fetchListings();
       }
     } catch (err) {
       setError('Napaka pri shranjevanju profila.');
@@ -293,19 +322,27 @@ const DashboardPage = () => {
 
           <div className="card">
             <h3>Primer zadetkov (demo)</h3>
+            {loadingListings && <p className="muted">Nalaganje zadetkov ...</p>}
+            {!loadingListings && listings.length === 0 && (
+              <p className="muted">Ni zadetkov. Prilagodite kriterije ali poskusite kasneje.</p>
+            )}
             <div className="listings">
-              {exampleListings.map((item) => (
-                <div key={item.title} className="listing">
+              {listings.map((item) => (
+                <a key={item.id} href={item.url} target="_blank" rel="noreferrer" className="listing listing-link">
                   <div>
-                    <p className="listing-title">{item.title}</p>
-                    <p className="muted">{item.location}</p>
+                    <p className="listing-title">{item.title || 'Oglas'}</p>
+                    <p className="muted">
+                      {item.city || item.district || item.location || 'Neznana lokacija'}
+                    </p>
                   </div>
                   <div className="listing-meta">
                     <span className="badge badge-success">Ustreza tvojim kriterijem</span>
-                    <strong>{item.price}</strong>
-                    <span>{item.sqm}</span>
+                    <strong>
+                      {item.price_eur ? `${item.price_eur.toLocaleString('sl-SI')} €` : 'Cena ni znana'}
+                    </strong>
+                    <span>{item.size_m2 ? `${item.size_m2} m²` : 'm² ni podano'}</span>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>
