@@ -46,6 +46,10 @@ const DashboardPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [loadingListings, setLoadingListings] = useState<boolean>(false);
+  const [chatQuestion, setChatQuestion] = useState('');
+  const [chatAnswer, setChatAnswer] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
 
   const fetchListings = async () => {
     setLoadingListings(true);
@@ -61,6 +65,32 @@ const DashboardPage = () => {
       setListings([]);
     } finally {
       setLoadingListings(false);
+    }
+  };
+
+  const askAssistant = async () => {
+    if (!chatQuestion.trim()) return;
+    setChatLoading(true);
+    setChatError(null);
+    try {
+      const res = await fetch('/api/chat_ollama.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ question: chatQuestion }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setChatError(data.message || 'Napaka pri pošiljanju vprašanja.');
+        setChatAnswer('');
+        return;
+      }
+      setChatAnswer(data.answer || '');
+    } catch (err) {
+      setChatError('Napaka pri komunikaciji z asistentom.');
+      setChatAnswer('');
+    } finally {
+      setChatLoading(false);
     }
   };
 
@@ -344,6 +374,28 @@ const DashboardPage = () => {
                   </div>
                 </a>
               ))}
+            </div>
+          </div>
+
+          <div className="card">
+            <h3>Vprašaš Skavta (Ollama)</h3>
+            <p className="muted">Postavi vprašanje o hišah/stanovanjih. Odgovarja lokalni model.</p>
+            {chatError && <div className="alert">{chatError}</div>}
+            <div className="chat-box">
+              <textarea
+                value={chatQuestion}
+                onChange={(e) => setChatQuestion(e.target.value)}
+                placeholder="Npr. Katera hiša v Celju med 170k in 180k je najboljša?"
+                rows={3}
+              />
+              <button className="btn btn-primary" onClick={askAssistant} disabled={chatLoading}>
+                {chatLoading ? 'Pošiljam ...' : 'Pošlji vprašanje'}
+              </button>
+              {chatAnswer && (
+                <div className="chat-answer">
+                  <p>{chatAnswer}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -585,6 +585,30 @@ a {
   box-shadow: var(--shadow-md);
 }
 
+.chat-box {
+  display: grid;
+  gap: 10px;
+}
+
+.chat-box textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+  font: inherit;
+  resize: vertical;
+  min-height: 90px;
+}
+
+.chat-answer {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+  padding: 12px;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
 .listing-title {
   margin: 0;
   font-weight: 700;
