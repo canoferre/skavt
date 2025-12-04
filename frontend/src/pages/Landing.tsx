@@ -4,17 +4,17 @@ import { useState } from 'react';
 const steps = [
   {
     title: 'Poveste, kaj iščete',
-    text: 'Vnesete območje, ceno, kvadraturo in tip nepremičnine, ki vas zanima.',
+    desc: 'Nastavite lokacijo, cenovni razpon, kvadraturo in tip nepremičnine, ki vas zanima.',
     number: '01',
   },
   {
     title: 'Skavt spremlja portale',
-    text: 'Avtomatsko prečesavamo oglase in filtriramo tiste, ki ustrezajo vašim kriterijem.',
+    desc: 'Skavt samodejno spremlja nepremičninske portale in gradi svojo bazo oglasov.',
     number: '02',
   },
   {
     title: 'Prejemate samo relevantne zadetke',
-    text: 'V beta fazi dobite obvestila po e-pošti ali Telegramu, brez nepotrebnega šuma.',
+    desc: 'Namesto 1000 oglasov dobite le tiste, ki ustrezajo vašim kriterijem.',
     number: '03',
   },
 ];
@@ -56,58 +56,9 @@ const LandingPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (
-    <main className="page">
-      <section className="hero">
-        <div className="hero-text">
-          <p className="pill">Beta dostop</p>
-          <h1>
-            Slovenski nepremičninski skavt – nekdo, ki namesto vas prečesava oglase.
-          </h1>
-          <p className="subtitle">
-            Orodje za resne kupce in najemnike: nastavite iskalni profil, mi pa vsak dan preverimo,
-            kaj se pojavi na portalu in vam pošljemo samo relevantne zadetke.
-          </p>
-          <div className="hero-actions">
-            <Link className="btn btn-primary" to="/register">
-              Prijavi se v beta
-            </Link>
-            <span className="muted">
-              Uporaba je v beta fazi brezplačna za sprejete uporabnike.
-            </span>
-          </div>
-        </div>
-        <div className="hero-card">
-          <div className="mock-card">
-            <h3>Prednosti Skavta</h3>
-            <ul>
-              <li>✓ Filtrira oglase po vaših kriterijih</li>
-              <li>✓ Brez ročnega osveževanja portalov</li>
-              <li>✓ Obvestila prek e-pošte ali Telegrama</li>
-              <li>✓ Ena nadzorna plošča za vse nastavitve</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-heading">
-          <p className="pill pill-ghost">Proces</p>
-          <h2>Kako deluje</h2>
-          <p className="subtitle">Tri preprosti koraki do vaše sanjske nepremičnine</p>
-        </div>
-        <div className="steps-grid">
-          {steps.map((step) => (
-            <div key={step.number} className="card step-card">
-              <div className="step-number">{step.number}</div>
-              <div className="icon-placeholder" aria-hidden>
-                •
-              </div>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+    <div className="landing-stack">
+      <HeroSection />
+      <HowItWorksSection steps={steps} />
 
       <section className="section two-col">
         <div>
@@ -193,8 +144,101 @@ const LandingPage = () => {
           })}
         </div>
       </section>
-    </main>
+    </div>
   );
 };
+
+const HeroSection = () => (
+  <section className="hero-premium animate-fade-in-up">
+    <div className="hero-text-stack">
+      <span className="badge-soft">
+        <span className="pulse-dot" />
+        Beta dostop za prve uporabnike
+      </span>
+      <h1 className="hero-title text-gradient">Slovenski nepremičninski skavt</h1>
+      <p className="hero-lead">
+        Skavt namesto vas prečesava nepremičninske oglase po vsej Sloveniji, jih filtrira po vaših
+        kriterijih in vam pošlje samo tiste, ki so res vredni ogleda.
+      </p>
+      <div className="hero-cta-row">
+        <Link className="cta-primary" to="/register">
+          Prijavi se v beta
+        </Link>
+        <a className="cta-secondary" href="#kako-deluje">
+          Kako deluje
+        </a>
+      </div>
+      <p className="hero-note">Uporaba je v beta fazi brezplačna za sprejete uporabnike.</p>
+    </div>
+
+    <div className="hero-card-premium">
+      <div className="hero-card-glow" />
+      <div className="hero-card-inner animate-scale-in">
+        <div className="hero-card-head">
+          <div>
+            <p className="hero-card-label">Trenutni profil</p>
+            <p className="hero-card-title">Ljubljana – Šiška</p>
+          </div>
+          <span className="status-pill">Aktivno</span>
+        </div>
+
+        <dl className="hero-card-list">
+          <div className="hero-card-row">
+            <dt>Cenovni razpon</dt>
+            <dd>200.000 € – 350.000 €</dd>
+          </div>
+          <div className="hero-card-row">
+            <dt>Velikost</dt>
+            <dd>50–80 m²</dd>
+          </div>
+          <div className="hero-card-row">
+            <dt>Tip</dt>
+            <dd>Stanovanje</dd>
+          </div>
+          <div className="hero-card-row">
+            <dt>Obveščanje</dt>
+            <dd>E-pošta + Telegram</dd>
+          </div>
+        </dl>
+
+        <div className="hero-sample-box">
+          <p className="hero-sample-label">Primer zadetkov (demo)</p>
+          <div className="hero-sample-card">
+            <p className="hero-sample-title">2-sobno stanovanje, prenovljeno</p>
+            <p className="hero-sample-meta">Ljubljana – Šiška • 52 m² • 245.000 €</p>
+            <span className="status-chip">✓ Ustreza tvojim kriterijem</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const HowItWorksSection = ({ steps }: { steps: typeof steps }) => (
+  <section id="kako-deluje" className="how-section">
+    <div className="how-heading">
+      <h2>Kako deluje</h2>
+      <p>
+        Tri preprosti koraki do nepremičninskih oglasov, ki so dejansko vredni vašega časa.
+      </p>
+    </div>
+    <div className="how-grid stagger-children">
+      {steps.map((step) => (
+        <div
+          key={step.number}
+          className="how-card animate-fade-in-up"
+        >
+          <div className="how-card-top">
+            <div className="how-badge">{step.number}</div>
+            <span className="how-meta">Korak</span>
+          </div>
+          <h3>{step.title}</h3>
+          <p>{step.desc}</p>
+          <span className="how-watermark">{step.number}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+);
 
 export default LandingPage;
